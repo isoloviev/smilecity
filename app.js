@@ -91,6 +91,8 @@ mongoose.connect(config.mongo, null, function (err, db) {
         app.get('/login.html', attachDB, routes.login);
         app.post('/upload/', attachDB, photos.upload);
 
+        app.get('/api/photos', attachDB, photos.list);
+
         // facebook
         app.get('/auth/facebook', passport.authenticate('facebook', {display: 'touch'}));
         app.get('/auth/facebook/callback',

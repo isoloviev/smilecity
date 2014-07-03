@@ -73,8 +73,8 @@ module.exports = {
                                 return;
                             }
                             // create preview
-                            module.exports._imagePreview(fileName, newPath, 300, 300, false, false, function () {
-                                module.exports._imagePreview(fileName, newPath, 300, 300, true, false, function () {
+                            module.exports._imagePreview(fileName, newPath, 150, 150, false, false, function () {
+                                module.exports._imagePreview(fileName, newPath, 150, 150, true, false, function () {
                                     module.exports._imagePreview(fileName, newPath, 600, 600, false, false, function () {
                                         res.send({
                                             files: [
@@ -173,7 +173,7 @@ module.exports = {
 
     list: function (req, res, next) {
 
-        var limit = 12;
+        var limit = 500;
         var skip = parseInt(req.param('next', 0));
         if (skip < 0) {
             skip = 0;

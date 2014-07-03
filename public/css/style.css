@@ -29,12 +29,35 @@ a span {
     margin-top: 0;
 }
 
-.menu-block {
+.top-block {
+    width: 100%;
+    position: fixed;
+    display: block;
     z-index: 50;
+}
+
+.menu-block {
+    float: right;
+    margin: 15px 15px 0 0;
+}
+
+.logo-block {
+    color: white;
+    margin: 0 0 0 30px;
 }
 
 .menu-block ul li {
     float: left;
     list-style: none;
     margin-left: 5px;
+}
+
+.mosaicflow__column {
+    float: left;
+}
+
+.smile-item img {
+    display: block;
+    width: 100%;
+    height: auto;
 }
