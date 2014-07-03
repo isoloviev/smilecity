@@ -59,8 +59,19 @@ module.exports = {
                             module.exports._imagePreview(fileName, newPath, 300, 300, false, false, function () {
                                 module.exports._imagePreview(fileName, newPath, 300, 300, true, false, function () {
                                     module.exports._imagePreview(fileName, newPath, 600, 600, false, false, function () {
-                                        console.log('completed');
-                                        res.send(200);
+                                        res.send({
+                                            files: [
+                                                {
+                                                    url: 'http://localhost:3000/images/600x600/' + fileName,
+                                                    thumbnailUrl: 'http://localhost:3000/images/300x300/' + fileName,
+                                                    name: imgFile.name,
+                                                    type: imgFile.headers['content-type'],
+                                                    size: imgFile.size,
+                                                    deleteUrl: '',
+                                                    deleteType: 'DELETE'
+                                                }
+                                            ]
+                                        });
                                     });
                                 });
                             });
