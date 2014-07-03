@@ -1,0 +1,30 @@
+a span {
+    margin-left: 5px;
+}
+
+.upload-container {
+    width: auto;
+    padding-top: 15px;
+}
+
+.white-popup {
+    position: relative;
+    background: #FFF;
+    padding: 20px;
+    width: auto;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.login-popup {
+    position: relative;
+    background: #FFF;
+    padding: 20px;
+    width: auto;
+    max-width: 750px;
+    margin: 20px auto;
+}
+
+.white-popup h3 {
+    margin-top: 0;
+}
