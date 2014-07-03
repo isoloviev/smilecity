@@ -15,6 +15,23 @@ module.exports = {
 
         var imgFile = req.files.files[0];
 
+        var imageTypes = /\.(gif|jpe?g|png)$/i;
+
+        if (!imageTypes.test(imgFile.name)) {
+            console.log('Unsupported file type');
+            res.send(500);
+            return;
+        }
+
+        // more than 7MB
+        if (7000000 < this.size) {
+            console.log('File is too big');
+            res.send({
+                error: 'File is too big'
+            });
+            return;
+        }
+
         var img = gm(imgFile.path);
         img.size(function (err, size) {
             if (!err) {
