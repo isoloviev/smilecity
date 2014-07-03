@@ -6,13 +6,11 @@ How to install
 
 Type the following command in your console:
 
-<code>
-npm install
-</code>
+`npm install`
 
 config.js
 -------------
-<code>
+`
 {
     "mongo": "mongodb://user:pass@host:port/db",
     "facebook": {
@@ -21,4 +19,4 @@ config.js
         "APP_CALLBACK": ""
     }
 }
-</code>
+`
