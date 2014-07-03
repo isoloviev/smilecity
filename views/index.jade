@@ -2,13 +2,31 @@ extends layout
 
 block content
 
-    a(class="btn btn-success upload-smile-popup-link",href="/upload.html")
-        i(class="glyphicon glyphicon-plus")
-        span Upload
+    div(class="menu-block pull-right")
 
-    a(class="btn btn-success upload-smile-popup-link",href="/login.html")
-        i(class="glyphicon glyphicon-plus")
-        span Login
+        ul
+            if (loggedUser)
+                li
+                    a(class="btn btn-default btn-xs upload-smile-popup-link",href="/profile.html")
+                        i(class="glyphicon glyphicon-user")
+                        span= loggedUser.email
 
+            li
+                a(class="btn btn-default btn-xs upload-smile-popup-link",href="/upload.html")
+                    i(class="glyphicon glyphicon-upload")
+                    span Upload
 
+            li
+                if (loggedUser)
+                    a(class="btn btn-default btn-xs",href="/logout.html")
+                        i(class="glyphicon glyphicon-log-out")
+                        span Logout
+                else
+                    a(class="btn btn-default btn-xs upload-smile-popup-link",href="/login.html")
+                        i(class="glyphicon glyphicon-log-in")
+                        span Login
+
+        .clearfix
+
+    div(class="smiles-block")
 

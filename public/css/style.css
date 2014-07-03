@@ -28,3 +28,13 @@ a span {
 .white-popup h3 {
     margin-top: 0;
 }
+
+.menu-block {
+    z-index: 50;
+}
+
+.menu-block ul li {
+    float: left;
+    list-style: none;
+    margin-left: 5px;
+}
