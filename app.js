@@ -14,7 +14,7 @@ var express = require('express'),
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3050);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.json());
@@ -89,6 +89,8 @@ mongoose.connect(config.mongo, null, function (err, db) {
         app.get('/', attachDB, routes.index);
         app.get('/upload.html', attachDB, routes.upload);
         app.get('/login.html', attachDB, routes.login);
+        app.get('/logout.html', attachDB, routes.logout);
+        app.get('/profile.html', attachDB, routes.profile);
         app.post('/upload/', attachDB, photos.upload);
 
         app.get('/api/photos', attachDB, photos.list);

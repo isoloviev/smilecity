@@ -17,9 +17,22 @@ exports.index = function (req, res) {
 };
 
 exports.upload = function (req, res) {
-    res.render('upload');
+    res.render('upload', {
+        loggedUser: req.user
+    });
+};
+
+exports.profile = function (req, res) {
+    res.render('profile', {
+        loggedUser: req.user
+    });
 };
 
 exports.login = function (req, res) {
     res.render('login');
+};
+
+exports.logout = function(req, res) {
+    req.logout();
+    res.redirect("/");
 };
