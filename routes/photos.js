@@ -173,7 +173,7 @@ module.exports = {
 
     list: function (req, res, next) {
 
-        var limit = 500;
+        var limit = 40;
         var skip = parseInt(req.param('next', 0));
         if (skip < 0) {
             skip = 0;

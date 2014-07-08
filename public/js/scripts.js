@@ -17,28 +17,39 @@ $(document).ready(function () {
                     .addClass('image-popup-no-margins')
                     .attr('item-id', file.id)
                     .attr('item-prev', 'http://' + window.location.hostname + '/images/300x300/' + file.fileName)
+                    .attr('item-likes', file.meta ? file.meta.likes || 0 : 0)
                     .attr('href', '/images/600x600/' + file.fileName)
                     .append($('<img/>')
+                        .attr('height', 230)
+                        .attr('width', 230)
                         .attr('src', '/images/300x300/' + file.fileName));
                 node.appendTo($('#smiles'));
             });
         }).complete(function () {
 
             var m = $('#smiles').mosaicflow({
-                itemSelector: ".smile-item",
-                minItemWidth: 230
+                itemSelector: ".smile-item"
             });
             m.mosaicflow('refill');
 
+            var ias = jQuery.ias({
+                container:  '#smiles',
+                item:       '.smile-item',
+                pagination: '#pagination',
+                next:       '.next'
+            });
 
             $('.image-popup-no-margins').magnificPopup({
                 type: 'image',
-                closeOnContentClick: true,
+                closeOnContentClick: false,
                 closeBtnInside: false,
                 fixedContentPos: true,
                 mainClass: 'mfp-no-margins',
                 image: {
-                    verticalFit: true
+                    verticalFit: true,
+                    titleSrc: function(item) {
+                        return '<div class="pull-right"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-star"></span> Give your smile <span class="label label-success">' + item.el.attr('item-likes') + '</span></button></div>';
+                    }
                 },
                 callbacks: {
                     open: function() {
