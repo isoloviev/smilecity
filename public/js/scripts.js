@@ -33,10 +33,10 @@ $(document).ready(function () {
             m.mosaicflow('refill');
 
             var ias = jQuery.ias({
-                container:  '#smiles',
-                item:       '.smile-item',
+                container: '#smiles',
+                item: '.smile-item',
                 pagination: '#pagination',
-                next:       '.next'
+                next: '.next'
             });
 
             $('.image-popup-no-margins').magnificPopup({
@@ -47,12 +47,12 @@ $(document).ready(function () {
                 mainClass: 'mfp-no-margins',
                 image: {
                     verticalFit: true,
-                    titleSrc: function(item) {
+                    titleSrc: function (item) {
                         return '<div class="pull-right"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-star"></span> Give your smile <span class="label label-success">' + item.el.attr('item-likes') + '</span></button></div>';
                     }
                 },
                 callbacks: {
-                    open: function() {
+                    open: function () {
                         var el = $(this.currItem.el);
                         new Ya.share({
                             element: 'ya_share',
@@ -62,17 +62,32 @@ $(document).ready(function () {
                             image: el.attr('item-prev'),
                             description: "SmileCity: Share your smile!",
                             quickservices: "yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,gplus",
-                            onready: function() {
+                            onready: function () {
                                 $('#ya_share').appendTo(".mfp-title");
                             }
                         });
                     },
-                    afterClose: function() {
+                    afterClose: function () {
                         $('<div id="ya_share"/>').appendTo('body');
                     }
                 }
             });
 
         });
+
+    if ($('#authFailure').length > 0) {
+        $.magnificPopup.open({
+            modal: true,
+            items: {
+                src: '#authFailure',
+                type:'inline'
+            }
+        }, 0);
+
+        $(document).on('click', '.popup-modal-dismiss', function (e) {
+            e.preventDefault();
+            $.magnificPopup.close();
+        });
+    }
 
 });

@@ -49,3 +49,10 @@ block content
         a(href="/page2/",class="next") next
 
     div#ya_share
+
+    if (authFailure)
+        div#authFailure(class="white-popup mfp-hide")
+            h1 Authentication Failed
+            p We were not able to login you. Please try again and accept permissions.
+            p
+                a(class="popup-modal-dismiss",href="#") Dismiss

@@ -66,8 +66,11 @@ passport.use(new VKontakteStrategy({
 
 function createOrRetrieveUser(accessToken, refreshToken, profile, done) {
     console.log(profile);
-    User.findOne({accountId: profile.provider + '-' + profile.id}, function(err, oldUser) {
-        if (err) { done(err); return; }
+    User.findOne({accountId: profile.provider + '-' + profile.id}, function (err, oldUser) {
+        if (err) {
+            done(err);
+            return;
+        }
         if (oldUser) {
             done(null, oldUser);
         } else {
@@ -81,8 +84,11 @@ function createOrRetrieveUser(accessToken, refreshToken, profile, done) {
             user.gender = profile.gender;
             user.role = userRoles['user'];
             user.regDate = new Date();
-            user.save(function(err) {
-                if (err) { done(err); return; }
+            user.save(function (err) {
+                if (err) {
+                    done(err);
+                    return;
+                }
                 done(null, user);
             });
         }
@@ -110,15 +116,29 @@ mongoose.connect(config.mongo, null, function (err, db) {
 
         // facebook
         app.get('/auth/facebook', passport.authenticate('facebook', {display: 'touch'}));
-        app.get('/auth/facebook/callback',
+        app.get('/auth/facebook/callback', function (req, res, next) {
             passport.authenticate('facebook', { successRedirect: '/',
-                failureRedirect: '/login' }));
+                failureRedirect: '/?auth=failure' })(req, res, function(err) {
+                if (err) {
+                    res.redirect('/?auth=failure');
+                } else {
+                    next();
+                }
+            });
+        });
 
         // vkontakte
         app.get('/auth/vkontakte', passport.authenticate('vkontakte', {display: 'mobile'}));
-        app.get('/auth/vkontakte/callback',
-            passport.authenticate('vkontakte', { successRedirect: '/',
-                failureRedirect: '/login' }));
+        app.get('/auth/vkontakte/callback', function (req, res, next) {
+                passport.authenticate('vkontakte', { successRedirect: '/',
+                    failureRedirect: '/?auth=failure' })(req, res, function(err) {
+                    if (err) {
+                        res.redirect('/?auth=failure');
+                    } else {
+                        next();
+                    }
+                });
+        });
 
         http.createServer(app).listen(app.get('port'), function () {
             console.log('Successfully connected to MongoDB',

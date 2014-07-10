@@ -11,8 +11,9 @@ exports.index = function (req, res) {
     }
     res.cookie('user', JSON.stringify(user));
     res.render('index', {
-        title: 'Smile City',
-        loggedUser: req.user
+        title: 'SmileCity',
+        loggedUser: req.user,
+        authFailure: req.query.auth == 'failure'
     });
 };
 
