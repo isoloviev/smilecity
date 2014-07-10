@@ -17,6 +17,11 @@ config.js
         "APP_ID": "",
         "APP_SECRET": "",
         "APP_CALLBACK": ""
+    },
+    "vkontakte": {
+        "APP_ID": "",
+        "APP_SECRET": "",
+        "APP_CALLBACK": ""
     }
 }
 `

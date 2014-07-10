@@ -51,30 +51,43 @@ passport.use(new FacebookStrategy({
         clientSecret: config.facebook.APP_SECRET,
         callbackURL: config.facebook.APP_CALLBACK
     },
-    function(accessToken, refreshToken, profile, done) {
-        console.log(profile);
-        User.findOne({accountId: profile.provider + '-' + profile.id}, function(err, oldUser) {
-            if (err) { done(err); return; }
-            if (oldUser) {
-                done(null, oldUser);
-            } else {
-                var userRoles = require('./models/Roles').userRoles;
-                var user = new User();
-                user.accountId = profile.provider + '-' + profile.id;
-                user.name = profile.displayName;
-                if (profile.emails)
-                    user.email = profile.emails[0].value;
-                user.gender = profile.gender;
-                user.role = userRoles['user'];
-                user.regDate = new Date();
-                user.save(function(err) {
-                    if (err) { done(err); return; }
-                    done(null, user);
-                });
-            }
-        });
-    }
+    createOrRetrieveUser
 ));
+
+var VKontakteStrategy = require('passport-vkontakte').Strategy;
+
+passport.use(new VKontakteStrategy({
+        clientID: config.vkontakte.APP_ID,
+        clientSecret: config.vkontakte.APP_SECRET,
+        callbackURL: config.vkontakte.APP_CALLBACK
+    },
+    createOrRetrieveUser
+));
+
+function createOrRetrieveUser(accessToken, refreshToken, profile, done) {
+    console.log(profile);
+    User.findOne({accountId: profile.provider + '-' + profile.id}, function(err, oldUser) {
+        if (err) { done(err); return; }
+        if (oldUser) {
+            done(null, oldUser);
+        } else {
+            var userRoles = require('./models/Roles').userRoles;
+            var user = new User();
+            user.accountId = profile.provider + '-' + profile.id;
+            user.provider = profile.provider;
+            user.name = profile.displayName;
+            if (profile.emails)
+                user.email = profile.emails[0].value;
+            user.gender = profile.gender;
+            user.role = userRoles['user'];
+            user.regDate = new Date();
+            user.save(function(err) {
+                if (err) { done(err); return; }
+                done(null, user);
+            });
+        }
+    });
+}
 
 mongoose.connect(config.mongo, null, function (err, db) {
     if (err) {
@@ -99,6 +112,12 @@ mongoose.connect(config.mongo, null, function (err, db) {
         app.get('/auth/facebook', passport.authenticate('facebook', {display: 'touch'}));
         app.get('/auth/facebook/callback',
             passport.authenticate('facebook', { successRedirect: '/',
+                failureRedirect: '/login' }));
+
+        // vkontakte
+        app.get('/auth/vkontakte', passport.authenticate('vkontakte', {display: 'mobile'}));
+        app.get('/auth/vkontakte/callback',
+            passport.authenticate('vkontakte', { successRedirect: '/',
                 failureRedirect: '/login' }));
 
         http.createServer(app).listen(app.get('port'), function () {

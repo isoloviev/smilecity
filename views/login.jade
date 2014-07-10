@@ -2,6 +2,15 @@ div(class="login-popup")
     h3 Login
     div.well To start using our service, please login by clicking button below.
 
-    div(style="text-align: center;")
-        a(href="/auth/facebook",target="_self")
-            img(src="/img/login_with_facebook.png")
+    div.row
+        div(class="col-md-2")
+
+        div(class="col-md-4")
+            a(href="/auth/facebook",target="_self",class="btn btn-block btn-social btn-facebook")
+                i(class="fa fa-facebook")
+                span Sign in with Facebook
+
+        div(class="col-md-4")
+            a(href="/auth/vkontakte",target="_self",class="btn btn-block btn-social btn-vk")
+                i(class="fa fa-vk")
+                span Sign in with VK

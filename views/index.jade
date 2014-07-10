@@ -9,9 +9,14 @@ block content
             ul
                 if (loggedUser)
                     li
-                        a(class="btn btn-default btn-xs upload-smile-popup-link",href="/profile.html")
-                            i(class="glyphicon glyphicon-user")
-                            span= loggedUser.name
+                        if (loggedUser.provider == 'facebook')
+                            a(class="btn btn-default btn-xs btn-social btn-facebook upload-smile-popup-link",href="/profile.html")
+                                i(class="fa fa-facebook")
+                                span= loggedUser.name
+                        if (loggedUser.provider == 'vkontakte')
+                            a(class="btn btn-default btn-xs btn-social btn-vk upload-smile-popup-link",href="/profile.html")
+                                i(class="fa fa-vk")
+                                span= loggedUser.name
 
                 li
                     if (loggedUser)

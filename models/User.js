@@ -21,6 +21,7 @@ var UserSchema = new Schema({
     { id: true });
 
 UserSchema.set('toJSON', { getters: true });
+
 UserSchema.path('username').get(function (v) {
     return v ? v : this.id;
 });
