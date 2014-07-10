@@ -1,4 +1,5 @@
-var userRoles = require('../models/Roles').userRoles;
+var userRoles = require('../models/Roles').userRoles,
+    Photo = require('../models/Photo');
 
 exports.index = function (req, res) {
     var role = userRoles.public, username = '';
@@ -10,11 +11,34 @@ exports.index = function (req, res) {
         }
     }
     res.cookie('user', JSON.stringify(user));
-    res.render('index', {
-        title: 'SmileCity',
-        loggedUser: req.user,
-        authFailure: req.query.auth == 'failure'
-    });
+
+    var limit = 40;
+    var page = parseInt(req.param('page', 1));
+    var skip = (page - 1) * limit;
+    if (skip < 0) {
+        skip = 0;
+    }
+
+    console.log('Page:', page);
+    console.log('Limit:', limit);
+    console.log('Skip:', skip);
+
+    Photo
+        .find(null, '-comments')
+        .skip(skip)
+        .limit(limit)
+        .populate('user')
+        .sort('-dateAdded')
+        .exec(function (err, smiles) {
+            res.render('index', {
+                title: 'SmileCity',
+                loggedUser: req.user,
+                authFailure: req.query.auth == 'failure',
+                smiles: smiles
+            });
+        });
+
+
 };
 
 exports.upload = function (req, res) {

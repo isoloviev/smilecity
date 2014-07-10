@@ -106,6 +106,7 @@ mongoose.connect(config.mongo, null, function (err, db) {
         };
 
         app.get('/', attachDB, routes.index);
+        app.get('/p/:page', attachDB, routes.index);
         app.get('/upload.html', attachDB, routes.upload);
         app.get('/login.html', attachDB, routes.login);
         app.get('/logout.html', attachDB, routes.logout);
