@@ -115,6 +115,10 @@ mongoose.connect(config.mongo, null, function (err, db) {
 
         app.get('/api/photos', attachDB, photos.list);
 
+        app.get('/smile/', function(req, res) {
+            res.render('smile');
+        });
+
         // facebook
         app.get('/auth/facebook', passport.authenticate('facebook', {display: 'touch'}));
         app.get('/auth/facebook/callback', function (req, res, next) {

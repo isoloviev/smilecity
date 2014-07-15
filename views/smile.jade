@@ -1,0 +1,22 @@
+doctype html
+html
+    head
+        title= title
+        meta(http-equiv="Content-Type",content="text/html; charset=utf-8")
+        meta(name="language",content="en")
+        meta(name="viewport",content="width=device-width, initial-scale=1.0")
+        link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css",rel="stylesheet",media="screen")
+        link(href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css",rel="stylesheet")
+        link(href="/css/style.css",rel="stylesheet")
+
+        script(src="//code.jquery.com/jquery-1.11.0.min.js",type="text/javascript")
+        script(src="/js/jquery.smileupload.js",type="text/javascript")
+
+    body(style="margin: 50px;")
+
+        div#smileUploader
+            div(class="smile-upload-preview thumbnail")
+            button(class="btn btn-primary smile-upload-button") Upload smile...
+
+        script.
+            $('#smileUploader').smileUpload();
