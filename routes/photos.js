@@ -59,8 +59,10 @@ module.exports = {
                 //crop by this side
                 img.crop(s, s, x, y).stream(function (err, stdout, stderr) {
                     if (err) return next(err);
-                    stdout.pipe(fs.createWriteStream(newPath));
-                    setTimeout(function () {
+                    var file = fs.createWriteStream(newPath);
+                    stdout.pipe(file);
+                    file.on('finish', function() {
+                        console.log("Saving photo and resizing");
                         var p = new Photo();
                         p.name = imgFile.name;
                         p.fileName = fileName;
@@ -73,28 +75,29 @@ module.exports = {
                                 return;
                             }
                             // create preview
-                            module.exports._imagePreview(fileName, newPath, 150, 150, false, false, function () {
-                                module.exports._imagePreview(fileName, newPath, 150, 150, true, false, function () {
-                                    module.exports._imagePreview(fileName, newPath, 600, 600, false, false, function () {
-                                        res.send({
-                                            files: [
-                                                {
-                                                    url: 'http://localhost:3000/images/600x600/' + fileName,
-                                                    thumbnailUrl: 'http://localhost:3000/images/300x300/' + fileName,
-                                                    name: imgFile.name,
-                                                    type: imgFile.headers['content-type'],
-                                                    size: imgFile.size,
-                                                    deleteUrl: '',
-                                                    deleteType: 'DELETE'
-                                                }
-                                            ]
-                                        });
+                            console.log("Resizing to 300x300...");
+                            module.exports._imagePreview(fileName, newPath, 300, 300, false, false, function () {
+                                console.log("Resizing to 600x600...");
+                                module.exports._imagePreview(fileName, newPath, 600, 600, false, false, function () {
+                                    console.log("Completed and sent to browser");
+                                    res.send({
+                                        files: [
+                                            {
+                                                url: 'http://localhost:3000/images/600x600/' + fileName,
+                                                thumbnailUrl: 'http://localhost:3000/images/300x300/' + fileName,
+                                                name: imgFile.name,
+                                                type: imgFile.headers['content-type'],
+                                                size: imgFile.size,
+                                                deleteUrl: '',
+                                                deleteType: 'DELETE'
+                                            }
+                                        ]
                                     });
                                 });
                             });
 
                         });
-                    }, 500);
+                    });
                 });
 
             } else {
