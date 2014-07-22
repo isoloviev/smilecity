@@ -45,7 +45,7 @@ block content
 
     div#smiles.clearfix
         each smile in smiles
-            a(class="smile-item image-popup-no-margins",item-id=smile.id,item-prev="",item-likes="0",href="/images/600x600/" + smile.fileName)
+            a(class="smile-item image-popup-no-margins",item-id=smile.id,item-prev="",item-likes=smile.meta && smile.meta.likes || 0,href="/images/600x600/" + smile.fileName)
                 img(src="/images/300x300/" + smile.fileName,height="230",width="230")
 
     div#page-nav

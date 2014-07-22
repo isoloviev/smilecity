@@ -24,7 +24,7 @@ exports.index = function (req, res) {
     console.log('Skip:', skip);
 
     Photo
-        .find(null, '-comments')
+        .find()
         .skip(skip)
         .limit(limit)
         .populate('user')

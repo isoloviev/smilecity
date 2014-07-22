@@ -21,7 +21,7 @@ $(document).ready(function () {
             }
         },
         function (newItems) {
-            $.each(newItems, function(index, value) {
+            $.each(newItems, function (index, value) {
                 m.mosaicflow('add', $(value));
             });
             popupRefill();
@@ -45,12 +45,10 @@ $(document).ready(function () {
     }
 
 
-
 });
 
 
-function popupRefill()
-{
+function popupRefill() {
     $('.image-popup-no-margins').magnificPopup({
         type: 'image',
         closeOnContentClick: false,
@@ -60,7 +58,29 @@ function popupRefill()
         image: {
             verticalFit: true,
             titleSrc: function (item) {
-                return '<div class="pull-right"><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-star"></span> Give your smile <span class="label label-success">' + item.el.attr('item-likes') + '</span></button></div>';
+                var btn = $('<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-star"></span> <span class="label-text">Give your smile</span> <span class="label label-success label-like">' + item.el.attr('item-likes') + '</span></button>').click(function () {
+                    $.ajax({
+                        url: '/api/photo/' + item.el.attr('item-id') + '/smile'
+                    }).done(function () {
+                            var like = parseInt(btn.find('.label-like').html());
+                            like++;
+                            item.el.attr('item-likes', like);
+                            btn.find('.label-like').html(item.el.attr('item-likes'));
+                            btn.attr('disabled', true);
+                            btn.find('.label-text').html('Thank you!');
+                        });
+                });
+
+                // if smile exists - disable button
+                $.ajax({
+                    url: '/api/photo/' + item.el.attr('item-id') + '/hasSmile'
+                }).done(function (res) {
+                        if (res.result) {
+                            btn.attr('disabled', true);
+                        }
+                    });
+
+                return $('<div class="pull-right" style="margin-top: -3px;">').html(btn);
             }
         },
         callbacks: {
@@ -78,6 +98,7 @@ function popupRefill()
                         $('#ya_share').appendTo(".mfp-title");
                     }
                 });
+
             },
             afterClose: function () {
                 $('<div id="ya_share"/>').appendTo('body');

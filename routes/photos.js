@@ -2,7 +2,8 @@ var fs = require('fs'),
     uuid = require('node-uuid'),
     path = require('path'),
     User = require('../models/User'),
-    Photo = require('../models/Photo');
+    Photo = require('../models/Photo'),
+    PhotoVote = require('../models/PhotoVote');
 
 module.exports = {
     upload: function (req, res, next) {
@@ -61,7 +62,7 @@ module.exports = {
                     if (err) return next(err);
                     var file = fs.createWriteStream(newPath);
                     stdout.pipe(file);
-                    file.on('finish', function() {
+                    file.on('finish', function () {
                         console.log("Saving photo and resizing");
                         var p = new Photo();
                         p.name = imgFile.name;
@@ -130,7 +131,7 @@ module.exports = {
         })
     },
 
-    _imageProcessor: function(w, h, filename, type, next) {
+    _imageProcessor: function (w, h, filename, type, next) {
         console.log('%s X %s ; %s', w, h, filename);
         var isBlurred = false;
         var isUserPic = false;
@@ -214,7 +215,7 @@ module.exports = {
 
     image: function (req, res) {
 
-        module.exports._imageProcessor(req.params.width, req.params.height, req.params.filename, req.params.type, function(code, filename) {
+        module.exports._imageProcessor(req.params.width, req.params.height, req.params.filename, req.params.type, function (code, filename) {
 
             if (code == 404) {
                 res.send(404);
@@ -279,6 +280,64 @@ module.exports = {
                 return;
             }
             res.json({ list: photo.comments});
+        });
+    },
+
+    saveSmile: function (req, res) {
+        if (!req.user) {
+            res.send(401);
+            return;
+        }
+
+        if (!req.params.photo) {
+            res.send(404);
+            return;
+        }
+
+        console.log('User wants to give smile for photo %s', req.params.photo);
+
+        PhotoVote.findOne({ user: req.user._id, photo: req.params.photo}).exec(function (err, photo) {
+            if (photo != null) {
+                console.log('This user is already voted for photo %s', req.params.photo);
+                res.send(500);
+                return;
+            }
+
+            Photo.findOne({ _id: req.params.photo}).exec(function (err, photo) {
+                if (!photo) {
+                    res.send(404);
+                    return;
+                }
+                new PhotoVote({
+                    photo: photo._id,
+                    user: req.user._id,
+                    date: new Date()
+                }).save(function () {
+                        var like = photo.meta && photo.meta.likes || 0;
+                        like++;
+                        photo.meta = { likes: like};
+                        photo.save(function () {
+                            res.json({ photo: photo});
+                        });
+                    });
+            });
+        });
+    },
+
+    hasSmile: function (req, res) {
+
+        if (!req.user) {
+            res.json({ result: false});
+            return;
+        }
+
+        if (!req.params.photo) {
+            res.send(404);
+            return;
+        }
+
+        PhotoVote.findOne({ user: req.user._id, photo: req.params.photo}).exec(function (err, photo) {
+            res.json({ result: photo != null});
         });
     }
 

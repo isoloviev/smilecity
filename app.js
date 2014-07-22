@@ -114,6 +114,8 @@ mongoose.connect(config.mongo, null, function (err, db) {
         app.post('/upload/', attachDB, photos.upload);
 
         app.get('/api/photos', attachDB, photos.list);
+        app.get('/api/photo/:photo/smile', attachDB, photos.saveSmile);
+        app.get('/api/photo/:photo/hasSmile', attachDB, photos.hasSmile);
 
         app.get('/smile/', function(req, res) {
             res.render('smile');
