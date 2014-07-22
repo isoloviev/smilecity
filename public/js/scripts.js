@@ -30,18 +30,7 @@ $(document).ready(function () {
     popupRefill();
 
     if ($('#authFailure').length > 0) {
-        $.magnificPopup.open({
-            modal: true,
-            items: {
-                src: '#authFailure',
-                type: 'inline'
-            }
-        }, 0);
-
-        $(document).on('click', '.popup-modal-dismiss', function (e) {
-            e.preventDefault();
-            $.magnificPopup.close();
-        });
+        createModal('authFailure');
     }
 
 
@@ -61,13 +50,17 @@ function popupRefill() {
                 var btn = $('<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-star"></span> <span class="label-text">Give your smile</span> <span class="label label-success label-like">' + item.el.attr('item-likes') + '</span></button>').click(function () {
                     $.ajax({
                         url: '/api/photo/' + item.el.attr('item-id') + '/smile'
-                    }).done(function () {
+                    }).success(function () {
                             var like = parseInt(btn.find('.label-like').html());
                             like++;
                             item.el.attr('item-likes', like);
                             btn.find('.label-like').html(item.el.attr('item-likes'));
                             btn.attr('disabled', true);
                             btn.find('.label-text').html('Thank you!');
+                        }).error(function(xhr, ajaxOptions, thrownError) {
+                            if (xhr.status == 401) {
+                                createModal('notLoggedIn');
+                            }
                         });
                 });
 
@@ -104,5 +97,20 @@ function popupRefill() {
                 $('<div id="ya_share"/>').appendTo('body');
             }
         }
+    });
+}
+
+function createModal(id) {
+    $.magnificPopup.open({
+        modal: true,
+        items: {
+            src: '#' + id,
+            type: 'inline'
+        }
+    }, 0);
+
+    $(document).on('click', '.popup-modal-dismiss', function (e) {
+        e.preventDefault();
+        $.magnificPopup.close();
     });
 }
