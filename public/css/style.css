@@ -1,6 +1,9 @@
 body {
     min-width: 300px;
+    min-height: 2000px;
+    background: #fff;
 }
+
 a span {
     margin-left: 5px;
 }
@@ -34,19 +37,17 @@ a span {
 
 .top-block {
     width: 100%;
-    position: fixed;
-    display: block;
     z-index: 50;
 }
 
 .menu-block {
     float: right;
-    margin: 15px 15px 0 0;
+    margin: 5px 7px 0 0;
 }
 
 .logo-block {
-    color: white;
-    margin: 0 0 0 30px;
+    color: #81a5ff;
+    margin: 0 0 0 15px;
 }
 
 .menu-block ul li {
@@ -85,7 +86,55 @@ a span {
     padding-right: 10px;
 }
 
-
 .smile-upload-preview {
     width: 300px;
+}
+
+.item {
+    width: 230px;
+    height: 230px;
+}
+
+#smiles {
+    height: 102%;
+    margin: 15px;
+}
+
+hr {
+    border-color: #81a5ff;
+    margin: 10px 0 0 0;
+}
+
+@keyframes start {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+
+@-webkit-keyframes start {
+    from {
+        -webkit-transform: scale(0);
+    }
+    to {
+        -webkit-transform: scale(1);
+    }
+}
+
+#smiles .item[data-state="init"] {
+    display: none;
+}
+
+#smiles .item[data-state="start"]  {
+    display: block;
+    animation: start 0.5s;
+    -webkit-animation: start 0.5s;
+}
+
+#smiles .item[data-state="move"]  {
+    transition: top 0.5s, left 0.5s, width 0.5s, height 0.5s;
+    -webkit-transition: top 0.5s, left 0.5s, width 0.5s, height 0.5s;
 }

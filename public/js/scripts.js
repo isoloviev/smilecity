@@ -7,14 +7,28 @@ $(document).ready(function () {
 
     var $smiles = $('#smiles');
 
-    var m = $smiles.mosaicflow({
-        itemSelector: ".smile-item"
+//    var m = $smiles.mosaicflow({
+//        itemSelector: ".smile-item"
+//    });
+
+    var wall = new freewall("#smiles");
+    wall.reset({
+        selector: '.item',
+        animate: false,
+        cellW: 230,
+        cellH: 230,
+        onResize: function () {
+            wall.refresh();
+        }
     });
+    wall.fitWidth();
+    // for scroll bar appear;
+    $(window).trigger("resize");
 
     $smiles.infinitescroll({
             navSelector: '#page-nav',
             nextSelector: '#page-nav a',
-            itemSelector: '.smile-item',
+            itemSelector: '#smiles .item',
             appendCallback: false,
             loading: {
                 msgText: 'Loading new smiles...'
@@ -22,7 +36,10 @@ $(document).ready(function () {
         },
         function (newItems) {
             $.each(newItems, function (index, value) {
-                m.mosaicflow('add', $(value));
+                $('#smiles').append(value);
+                //if (index == (newItems.length - 1 )) {
+                    wall.refresh();
+                //}
             });
             popupRefill();
         });
@@ -38,14 +55,25 @@ $(document).ready(function () {
 
 
 function popupRefill() {
-    $('.image-popup-no-margins').magnificPopup({
+    var yahsre = $('<div id="ya_share"/>');
+
+    $('#smiles').magnificPopup({
         type: 'image',
+        delegate: 'a',
         closeOnContentClick: false,
         closeBtnInside: false,
         fixedContentPos: true,
         mainClass: 'mfp-no-margins',
+        tLoading: 'Loading image #%curr%...',
+        gallery: {
+            enabled: true,
+            navigateByImgClick: true,
+            tCounter: '',
+            preload: [0, 1] // Will preload 0 - before current, and 1 after the current image
+        },
         image: {
             verticalFit: true,
+            tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
             titleSrc: function (item) {
                 var btn = $('<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-star"></span> <span class="label-text">Give your smile</span> <span class="label label-success label-like">' + item.el.attr('item-likes') + '</span></button>').click(function () {
                     $.ajax({
@@ -57,7 +85,7 @@ function popupRefill() {
                             btn.find('.label-like').html(item.el.attr('item-likes'));
                             btn.attr('disabled', true);
                             btn.find('.label-text').html('Thank you!');
-                        }).error(function(xhr, ajaxOptions, thrownError) {
+                        }).error(function (xhr, ajaxOptions, thrownError) {
                             if (xhr.status == 401) {
                                 createModal('notLoggedIn');
                             }
@@ -77,24 +105,23 @@ function popupRefill() {
             }
         },
         callbacks: {
-            open: function () {
+            change: function () {
+                if ($('#ya_share').length > 0) {
+                    $('#ya_share').remove();
+                }
+                yahsre.appendTo('body');
                 var el = $(this.currItem.el);
                 new Ya.share({
                     element: 'ya_share',
                     l10n: 'en',
                     theme: 'counter',
                     link: 'http://' + window.location.hostname + '/p/' + el.attr('item-id'),
-                    image: el.attr('item-prev'),
+                    image: 'http://' + window.location.hostname + '/' + el.attr('item-prev'),
                     description: "SmileCity: Share your smile!",
-                    quickservices: "yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,gplus",
-                    onready: function () {
-                        $('#ya_share').appendTo(".mfp-title");
-                    }
+                    quickservices: "yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,gplus"
                 });
-
-            },
-            afterClose: function () {
-                $('<div id="ya_share"/>').appendTo('body');
+                var magnificPopup = $.magnificPopup.instance;
+                magnificPopup.contentContainer.find('.mfp-title').append(yahsre);
             }
         }
     });

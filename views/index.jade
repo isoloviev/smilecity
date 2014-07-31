@@ -10,48 +10,48 @@ block content
                 if (loggedUser)
                     li
                         if (loggedUser.provider == 'facebook')
-                            a(class="btn btn-default btn-xs btn-social btn-facebook upload-smile-popup-link",href="/profile.html")
+                            a(class="btn btn-default btn-social btn-facebook upload-smile-popup-link",href="/profile.html")
                                 i(class="fa fa-facebook")
                                 span= loggedUser.name
                         if (loggedUser.provider == 'vkontakte')
-                            a(class="btn btn-default btn-xs btn-social btn-vk upload-smile-popup-link",href="/profile.html")
+                            a(class="btn btn-default btn-social btn-vk upload-smile-popup-link",href="/profile.html")
                                 i(class="fa fa-vk")
                                 span= loggedUser.name
 
                 li
                     if (loggedUser)
-                        a(class="btn btn-primary btn-xs upload-smile-popup-link",href="/upload.html")
+                        a(class="btn btn-primary upload-smile-popup-link",href="/upload.html")
                             i(class="glyphicon glyphicon-upload")
                             span Share your smile!
                     else
-                        a(class="btn btn-primary btn-xs upload-smile-popup-link",href="/login.html")
+                        a(class="btn btn-primary upload-smile-popup-link",href="/login.html")
                             i(class="glyphicon glyphicon-upload")
                             span Share your smile!
 
                 li
                     if (loggedUser)
-                        a(class="btn btn-default btn-xs",href="/logout.html")
+                        a(class="btn btn-default",href="/logout.html")
                             i(class="glyphicon glyphicon-log-out")
                             span Logout
                     else
-                        a(class="btn btn-default btn-xs upload-smile-popup-link",href="/login.html")
+                        a(class="btn btn-default upload-smile-popup-link",href="/login.html")
                             i(class="glyphicon glyphicon-log-in")
                             span Login
 
         div(class="logo-block")
-            h1 SmileCity
+            h1 SmileCity.me
 
         .clearfix
 
+    hr
+
     div#smiles.clearfix
         each smile in smiles
-            a(class="smile-item image-popup-no-margins",item-id=smile.id,item-prev="",item-likes=smile.meta && smile.meta.likes || 0,href="/images/600x600/" + smile.fileName)
+            a(class="item image-popup-no-margins",item-id=smile.id,item-prev="/images/300x300/" + smile.fileName,item-likes=smile.meta && smile.meta.likes || 0,href="/images/600x600/" + smile.fileName)
                 img(src="/images/300x300/" + smile.fileName,height="230",width="230")
 
-    div#page-nav
+    div#page-nav(style="display: none")
         a(href="/p/2",class="next") next
-
-    div#ya_share
 
     if (authFailure)
         div#authFailure(class="white-popup mfp-hide")
@@ -65,3 +65,27 @@ block content
         p You should be logged in to continue use this service
         p
             a(class="popup-modal-dismiss",href="#") Dismiss
+
+    script.
+        (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+        try {
+        w.yaCounter25652794 = new Ya.Metrika({id:25652794,
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true});
+            } catch(e) { }
+            });
+                var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+            if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    noscript
+        div
+            img(src="//mc.yandex.ru/watch/25652794",style="position:absolute; left:-9999px;",alt="")
