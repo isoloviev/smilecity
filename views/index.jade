@@ -60,6 +60,10 @@ block content
             p
                 a(class="popup-modal-dismiss",href="#") Dismiss
 
+    if (selectedSmile != '')
+        script.
+            showSmile("#{selectedSmile}");
+
     div#notLoggedIn(class="white-popup mfp-hide")
         h1 Authentication Failed
         p You should be logged in to continue use this service

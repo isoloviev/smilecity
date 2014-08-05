@@ -46,8 +46,9 @@ a span {
 }
 
 .logo-block {
-    color: #81a5ff;
+    color: #428bca;
     margin: 0 0 0 15px;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 .menu-block ul li {

@@ -38,7 +38,7 @@ $(document).ready(function () {
             $.each(newItems, function (index, value) {
                 $('#smiles').append(value);
                 //if (index == (newItems.length - 1 )) {
-                    wall.refresh();
+                wall.refresh();
                 //}
             });
             popupRefill();
@@ -115,7 +115,7 @@ function popupRefill() {
                     element: 'ya_share',
                     l10n: 'en',
                     theme: 'counter',
-                    link: 'http://' + window.location.hostname + '/p/' + el.attr('item-id'),
+                    link: 'http://' + window.location.hostname + '/smile/' + el.attr('item-id'),
                     image: 'http://' + window.location.hostname + '/' + el.attr('item-prev'),
                     description: "SmileCity: Share your smile!",
                     quickservices: "yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,gplus"
@@ -140,4 +140,51 @@ function createModal(id) {
         e.preventDefault();
         $.magnificPopup.close();
     });
+}
+
+function showSmile(photo) {
+    // if smile exists - disable button
+    $.ajax({
+        url: '/api/photo/' + photo
+    }).done(function (res) {
+            var photo = res.photo;
+            if (photo) {
+                $.magnificPopup.open({
+                    items: {
+                        src: '/images/600x600/' + photo.fileName,
+                        type: 'image'
+                    },
+                    image: {
+                        titleSrc: function (item) {
+                            var btn = $('<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-star"></span> <span class="label-text">Give your smile</span> <span class="label label-success label-like">' + (photo.meta && photo.meta.likes || 0) + '</span></button>').click(function () {
+                                $.ajax({
+                                    url: '/api/photo/' + photo.id + '/smile'
+                                }).success(function () {
+                                        var like = parseInt(btn.find('.label-like').html());
+                                        like++;
+                                        btn.find('.label-like').html(like.toString());
+                                        btn.attr('disabled', true);
+                                        btn.find('.label-text').html('Thank you!');
+                                    }).error(function (xhr, ajaxOptions, thrownError) {
+                                        if (xhr.status == 401) {
+                                            createModal('notLoggedIn');
+                                        }
+                                    });
+                            });
+
+                            // if smile exists - disable button
+                            $.ajax({
+                                url: '/api/photo/' + photo.id + '/hasSmile'
+                            }).done(function (res) {
+                                    if (res.result) {
+                                        btn.attr('disabled', true);
+                                    }
+                                });
+
+                            return $('<div class="pull-right" style="margin-top: -42px;">').html(btn);
+                        }
+                    }
+                });
+            }
+        });
 }

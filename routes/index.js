@@ -30,11 +30,14 @@ exports.index = function (req, res) {
         .populate('user')
         .sort('-dateAdded')
         .exec(function (err, smiles) {
+            var selectedSmile = req.param('photo', '');
+            console.log(selectedSmile);
             res.render('index', {
                 title: 'SmileCity',
                 loggedUser: req.user,
                 authFailure: req.query.auth == 'failure',
-                smiles: smiles
+                smiles: smiles,
+                selectedSmile: selectedSmile
             });
         });
 

@@ -261,10 +261,14 @@ module.exports = {
         });
     },
 
-    item: function (req, res, next) {
-        console.log('User wants to get info about photo %s', req.params.photoId);
-        Photo.findOne({ _id: req.params.photoId}, '-comments').populate('user').exec(function (err, photo) {
-            res.json({ photo: photo});
+    item: function (req, res) {
+        console.log('User wants to get info about photo %s', req.params.photo);
+        Photo.findOne({ _id: req.params.photo}, '-comments').populate('user').exec(function (err, photo) {
+            if (photo == null) {
+                res.send(404);
+            } else {
+                res.json({ photo: photo});
+            }
         });
     },
 

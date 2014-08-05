@@ -107,6 +107,7 @@ mongoose.connect(config.mongo, null, function (err, db) {
 
         app.get('/', attachDB, routes.index);
         app.get('/p/:page', attachDB, routes.index);
+        app.get('/smile/:photo', attachDB, routes.index);
         app.get('/upload.html', attachDB, routes.upload);
         app.get('/login.html', attachDB, routes.login);
         app.get('/logout.html', attachDB, routes.logout);
@@ -116,6 +117,7 @@ mongoose.connect(config.mongo, null, function (err, db) {
         app.get('/api/photos', attachDB, photos.list);
         app.get('/api/photo/:photo/smile', attachDB, photos.saveSmile);
         app.get('/api/photo/:photo/hasSmile', attachDB, photos.hasSmile);
+        app.get('/api/photo/:photo', attachDB, photos.item);
 
         app.get('/smile/', function(req, res) {
             res.render('smile');
